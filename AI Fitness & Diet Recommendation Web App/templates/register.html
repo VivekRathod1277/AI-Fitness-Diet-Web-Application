@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AI Fitness Studio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    <div class="container">
+        <div class="glass-card" style="max-width: 500px; margin: auto;">
+            <h1>Create Account</h1>
+            <p class="subtitle">Join the studio to track your progress</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="color: var(--accent); margin-bottom: 1rem; text-align: center;">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="/register" method="POST">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Pick a unique name">
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Create a strong password">
+                </div>
+                <button type="submit" class="btn-primary">Register Now</button>
+            </form>
+            <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
+                Already have an account? <a href="/login" style="color: var(--secondary);">Login here</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

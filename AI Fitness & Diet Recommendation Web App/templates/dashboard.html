@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AI Fitness Studio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { align-items: flex-start; padding: 2rem; }
+        .dash-container { max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* ---- Section title ---- */
+        .section-heading {
+            font-size: 1.1rem; font-weight: 700; color: var(--secondary);
+            letter-spacing: 1.5px; text-transform: uppercase;
+            margin: 3rem 0 1.5rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .section-heading::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(to right, rgba(6,182,212,0.4), transparent);
+        }
+
+        /* ---- Today banner ---- */
+        .today-banner {
+            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.1));
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem;
+        }
+        .today-label {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--secondary); margin-bottom: 0.5rem;
+        }
+        .today-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        @media(max-width:700px){ .today-grid { grid-template-columns: 1fr; } }
+
+        .today-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; padding: 1.5rem;
+        }
+        .today-card h4 { color: var(--primary); margin-bottom: 1rem; font-size: 1rem; }
+        .meal-row {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+        .meal-row:last-child { border-bottom: none; }
+        .meal-label {
+            min-width: 80px; font-size: 0.75rem; font-weight: 700;
+            color: var(--text-muted); text-transform: uppercase; padding-top: 2px;
+        }
+        .meal-value { color: var(--text-light); }
+
+        /* ---- Exercise card ---- */
+        .ex-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 0.5rem 1rem;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.88rem;
+        }
+        .ex-row:last-child { border-bottom: none; }
+        .ex-name { font-weight: 600; color: var(--text-light); }
+        .ex-note { grid-column: 1 / -1; font-size: 0.78rem; color: var(--text-muted); padding-left: 0.5rem; font-style: italic; }
+        .ex-badge {
+            font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+            padding: 0.25rem 0.6rem; border-radius: 8px; text-align: center;
+        }
+        .badge-sets { background: rgba(99,102,241,0.15); color: var(--primary); }
+        .badge-reps { background: rgba(6,182,212,0.15); color: var(--secondary); }
+        .badge-rest { background: rgba(244,63,94,0.12); color: #f87171; }
+
+        /* ---- Day tabs ---- */
+        .tabs-nav { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+        .tab-btn {
+            padding: 0.6rem 1.2rem; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+            color: var(--text-muted); cursor: pointer; font-weight: 600;
+            font-size: 0.85rem; white-space: nowrap; transition: all 0.3s;
+            font-family: inherit;
+        }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px rgba(99,102,241,0.35); }
+        .tab-btn.today-tab { border-color: var(--secondary); color: var(--secondary); }
+        .tab-btn.today-tab.active { background: var(--secondary); color: #0f172a; border-color: var(--secondary); box-shadow: 0 4px 15px rgba(6,182,212,0.35); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ---- Plan panel ---- */
+        .plan-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px; padding: 1.75rem;
+        }
+        .plan-panel-header {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 1.5rem; padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .plan-type-badge {
+            padding: 0.4rem 1rem; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 700; color: white;
+        }
+        .plan-focus { font-size: 0.85rem; color: var(--text-muted); }
+        .plan-duration { margin-left: auto; font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ---- Workout two-col grid ---- */
+        .workout-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media(max-width:900px){ .workout-panels { grid-template-columns: 1fr; } }
+
+        /* ---- Charts ---- */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media(max-width:768px){ .charts-grid { grid-template-columns: 1fr !important; } }
+        .chart-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px; padding: 1.5rem;
+        }
+        .chart-card h3 { margin-bottom: 1rem; font-size: 0.95rem; color: var(--text-muted); }
+
+        /* ---- History table ---- */
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .history-table th { color: var(--secondary); font-size: 0.78rem; text-transform: uppercase; padding: 0.9rem 1rem; text-align: left; }
+        .history-table td { padding: 0.9rem 1rem; color: var(--text-light); border-top: 1px solid rgba(255,255,255,0.05); }
+        .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* ---- Nav ---- */
+        .dash-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .dash-nav h2 { color: var(--secondary); font-size: 1.4rem; }
+        .dash-nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 1.5rem; font-size: 0.9rem; transition: color 0.3s; }
+        .dash-nav-links a:hover { color: var(--text-light); }
+        .dash-nav-links a.accent { color: var(--secondary); }
+        .dash-nav-links a.danger { color: var(--accent); }
+
+        .no-plan-msg { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .no-plan-msg a { color: var(--secondary); }
+    </style>
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="dash-container">
+
+        <!-- Nav -->
+        <nav class="dash-nav" data-aos="fade-down">
+            <h2>Studio Dashboard</h2>
+            <div class="dash-nav-links">
+                <a href="/">New Plan</a>
+                <a href="/profile" class="accent">👤 Profile</a>
+                <a href="/logout" class="danger">Logout</a>
+            </div>
+        </nav>
+
+        <!-- Welcome -->
+        <div data-aos="fade-right" style="margin-bottom: 2rem;">
+            <h1 style="font-size:2rem; margin-bottom:0.25rem;">Hello, {{ current_user.username }}! 👋</h1>
+            <p style="color: var(--text-muted);">Here is your fitness overview and saved plan.</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             TODAY'S OVERVIEW
+        ═══════════════════════════════════════════ -->
+        {% if latest_plan %}
+        <div class="section-heading" data-aos="fade-up">📅 Today's Overview <span style="font-size:0.75rem;color:var(--text-muted);text-transform:none;letter-spacing:0;">({{ today_day }} — based on your latest saved plan)</span></div>
+
+        <div class="today-banner" data-aos="fade-up">
+            <div class="today-label">⚡ Quick View</div>
+            <div style="font-size:1.4rem; font-weight:700; color: var(--text-light);">
+                {{ latest_plan.workout[today_day].type if latest_plan.workout and latest_plan.workout[today_day] else 'No workout' }}
+            </div>
+            <div class="today-grid">
+                <!-- Today's Diet -->
+                <div class="today-card">
+                    <h4>🍽️ Today's Meals</h4>
+                    {% if latest_plan.diet and latest_plan.diet[today_day] %}
+                    <div class="meal-row">
+                        <span class="meal-label">🌅 Breakfast</span>
+                        <span class="meal-value">{{ latest_plan.diet[today_day].breakfast }}</span>
+                    </div>
+                    <div class="meal-row">
+                        <span class="meal-label">☀️ Lunch</span>
+                        <span class="meal-value">{{ latest_plan.diet[today_day].lunch }}</span>
+                    </div>
+                    <div class="meal-row">
+                        <span class="meal-label">🌙 Dinner</span>
+                        <span class="meal-value">{{ latest_plan.diet[today_day].dinner }}</span>
+                    </div>
+                    {% else %}
+                    <p style="color:var(--text-muted); font-size:0.9rem;">No meal data for today.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Today's Workout -->
+                <div class="today-card">
+                    <h4>💪 Today's Workout</h4>
+                    {% set tw = latest_plan.workout[today_day] if latest_plan.workout and latest_plan.workout[today_day] else None %}
+                    {% if tw %}
+                        {% if tw.exercises is defined %}
+                            {% for ex in tw.exercises[:3] %}
+                            <div class="ex-row">
+                                <span class="ex-name">{{ ex.name }}</span>
+                                <span class="ex-badge badge-sets">{{ ex.sets }} sets</span>
+                                <span class="ex-badge badge-reps">{{ ex.reps }}</span>
+                                <span class="ex-badge badge-rest">{{ ex.rest }}</span>
+                            </div>
+                            {% endfor %}
+                            {% if tw.exercises | length > 3 %}
+                            <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.5rem;">+{{ tw.exercises|length - 3 }} more — see full plan below ↓</p>
+                            {% endif %}
+                        {% else %}
+                            {% for item in tw.ex %}
+                            <div class="meal-row"><span class="meal-value">{{ item }}</span></div>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                    <p style="color:var(--text-muted); font-size:0.9rem;">No workout data for today.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             WEEKLY DIET PLAN
+        ═══════════════════════════════════════════ -->
+        <div class="section-heading" data-aos="fade-up">🍽️ Weekly Diet Plan</div>
+        <div data-aos="fade-up">
+            <div class="tabs-nav" id="dietTabs">
+                {% for i in range(1, 8) %}
+                <button class="tab-btn {% if loop.first %}active{% endif %} {% if today_day == 'Day ' ~ i %}today-tab{% endif %}"
+                        onclick="switchTab('diet', 'diet-day{{ i }}', this)">
+                    Day {{ i }}{% if today_day == 'Day ' ~ i %} ★{% endif %}
+                </button>
+                {% endfor %}
+            </div>
+            {% for i in range(1, 8) %}
+            {% set dk = 'Day ' ~ i %}
+            <div id="diet-day{{ i }}" class="tab-content {% if loop.first %}active{% endif %}">
+                <div class="plan-panel">
+                    {% if latest_plan.diet and latest_plan.diet[dk] %}
+                    <div class="meal-row" style="padding: 1rem 0;">
+                        <span class="meal-label">🌅 Breakfast</span>
+                        <span class="meal-value" style="font-size:1rem;">{{ latest_plan.diet[dk].breakfast }}</span>
+                    </div>
+                    <div class="meal-row" style="padding: 1rem 0;">
+                        <span class="meal-label">☀️ Lunch</span>
+                        <span class="meal-value" style="font-size:1rem;">{{ latest_plan.diet[dk].lunch }}</span>
+                    </div>
+                    <div class="meal-row" style="padding: 1rem 0; border-bottom: none;">
+                        <span class="meal-label">🌙 Dinner</span>
+                        <span class="meal-value" style="font-size:1rem;">{{ latest_plan.diet[dk].dinner }}</span>
+                    </div>
+                    {% else %}
+                    <p style="color:var(--text-muted);">No diet data saved for this day.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             WEEKLY WORKOUT PLAN
+        ═══════════════════════════════════════════ -->
+        <div class="section-heading" data-aos="fade-up">💪 Weekly Workout Plan</div>
+        <div data-aos="fade-up">
+            <div class="tabs-nav" id="workoutTabs">
+                {% for i in range(1, 8) %}
+                {% set dk = 'Day ' ~ i %}
+                {% set wk = latest_plan.workout[dk] if latest_plan.workout and latest_plan.workout[dk] else None %}
+                <button class="tab-btn {% if loop.first %}active{% endif %} {% if today_day == dk %}today-tab{% endif %}"
+                        onclick="switchTab('workout', 'wo-day{{ i }}', this)">
+                    Day {{ i }}
+                    {% if wk %}<span style="display:block;font-size:0.65rem;opacity:0.7;">{{ wk.type[:10] }}</span>{% endif %}
+                    {% if today_day == dk %} ★{% endif %}
+                </button>
+                {% endfor %}
+            </div>
+            {% for i in range(1, 8) %}
+            {% set dk = 'Day ' ~ i %}
+            {% set wk = latest_plan.workout[dk] if latest_plan.workout and latest_plan.workout[dk] else None %}
+            <div id="wo-day{{ i }}" class="tab-content {% if loop.first %}active{% endif %}">
+                {% if wk %}
+                <div class="plan-panel">
+                    <div class="plan-panel-header">
+                        <span class="plan-type-badge" style="background: {{ wk.color if wk.color is defined else '#6366f1' }};">{{ wk.type }}</span>
+                        {% if wk.focus is defined %}<span class="plan-focus">{{ wk.focus }}</span>{% endif %}
+                        {% if wk.duration is defined %}<span class="plan-duration">⏱ {{ wk.duration }}</span>{% endif %}
+                    </div>
+
+                    {% if wk.exercises is defined %}
+                        <!-- New advanced format -->
+                        {% for ex in wk.exercises %}
+                        <div class="ex-row">
+                            <span class="ex-name">{{ ex.name }}</span>
+                            <span class="ex-badge badge-sets">{{ ex.sets }} sets</span>
+                            <span class="ex-badge badge-reps">{{ ex.reps }}</span>
+                            <span class="ex-badge badge-rest">Rest: {{ ex.rest }}</span>
+                            {% if ex.notes %}<span class="ex-note">💡 {{ ex.notes }}</span>{% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Old format fallback -->
+                        {% for item in wk.ex %}
+                        <div class="meal-row"><span class="meal-value">{{ item }}</span></div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="plan-panel"><p style="color:var(--text-muted);">No workout data for this day.</p></div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- No saved plan yet -->
+        <div class="no-plan-msg glass-card" data-aos="fade-up" style="margin-bottom: 2rem;">
+            <p style="font-size:1.1rem; margin-bottom:1rem;">No plans saved yet.</p>
+            <p><a href="/">Generate your first plan →</a> and click <strong>Save Weekly Roadmap</strong> to see it here.</p>
+        </div>
+        {% endif %}
+
+        <!-- ═══════════════════════════════════════════
+             PROGRESS CHARTS
+        ═══════════════════════════════════════════ -->
+        {% if records %}
+        <div class="section-heading" data-aos="fade-up">📈 Progress Charts</div>
+        <div class="charts-grid" data-aos="fade-up">
+            <div class="chart-card">
+                <h3>Weight Trend (kg)</h3>
+                <canvas id="weightChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>BMI Trend</h3>
+                <canvas id="bmiChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             HISTORY LOG
+        ═══════════════════════════════════════════ -->
+        <div class="section-heading" data-aos="fade-up">🗂️ History Log</div>
+        <div class="glass-card animate-in" data-aos="fade-up" style="padding: 1.5rem; overflow-x: auto;">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Weight</th>
+                        <th>BMI</th>
+                        <th>Calories</th>
+                        <th>Goal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.date.strftime('%d %b, %Y') }}</td>
+                        <td>{{ record.weight }} kg</td>
+                        <td>{{ record.bmi }}</td>
+                        <td>{{ record.calories }} kcal</td>
+                        <td>{{ record.goal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <div style="height: 3rem;"></div>
+    </div><!-- end dash-container -->
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Tab switching (diet and workout)
+        function switchTab(group, activeId, btn) {
+            document.querySelectorAll('#' + (group === 'diet' ? 'diet' : 'workout') + 'Tabs .tab-btn')
+                .forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const prefix = group === 'diet' ? 'diet-day' : 'wo-day';
+            document.querySelectorAll('[id^="' + prefix + '"]')
+                .forEach(c => c.classList.remove('active'));
+            document.getElementById(activeId).classList.add('active');
+        }
+
+        {% if records %}
+        const labels      = {{ labels | safe }};
+        const weightData  = {{ weights | safe }};
+        const bmiData     = {{ bmis | safe }};
+
+        const commonOptions = {
+            responsive: true,
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.07)' }, ticks: { color: '#94a3b8' } },
+                x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            },
+            plugins: { legend: { display: false } }
+        };
+
+        new Chart(document.getElementById('weightChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    data: weightData,
+                    borderColor: '#06b6d4',
+                    backgroundColor: 'rgba(6,182,212,0.1)',
+                    fill: true, tension: 0.4, pointRadius: 5,
+                    pointBackgroundColor: '#06b6d4'
+                }]
+            },
+            options: commonOptions
+        });
+
+        new Chart(document.getElementById('bmiChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    data: bmiData,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99,102,241,0.1)',
+                    fill: true, tension: 0.4, pointRadius: 5,
+                    pointBackgroundColor: '#6366f1'
+                }]
+            },
+            options: commonOptions
+        });
+        {% endif %}
+    </script>
+</body>
+</html>

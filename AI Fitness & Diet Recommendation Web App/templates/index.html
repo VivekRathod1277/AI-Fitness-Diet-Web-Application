@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness & Diet Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .top-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .top-nav a:hover { color: var(--text-light); }
+        .top-nav a.accent { color: var(--secondary); }
+        .profile-loaded-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.25);
+            color: #22c55e;
+            border-radius: 20px;
+            padding: 0.35rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+        .profile-loaded-badge .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 6px #22c55e;
+        }
+        .badge-row { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Top navigation -->
+        {% if current_user.is_authenticated %}
+        <nav class="top-nav" data-aos="fade-down">
+            <a href="/profile" class="accent">👤 {{ current_user.username }}</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout" style="color: var(--accent);">Logout</a>
+        </nav>
+        {% else %}
+        <nav class="top-nav" data-aos="fade-down">
+            <a href="/login">Login</a>
+            <a href="/register" class="accent">Register</a>
+        </nav>
+        {% endif %}
+
+        <div class="glass-card animate-in" data-aos="fade-up">
+            <h1>AI Fitness Studio</h1>
+            <p class="subtitle">Personalized Diet & Workout Plans Tailored to Your Goals</p>
+
+            <!-- Profile auto-fill badge -->
+            {% if profile and profile.weight %}
+            <div class="badge-row">
+                <span class="profile-loaded-badge">
+                    <span class="dot"></span>
+                    Profile loaded — form pre-filled. Just pick your Goal!
+                </span>
+            </div>
+            {% endif %}
+
+            <form action="/" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" placeholder="e.g. 25" required min="10" max="100"
+                               value="{{ profile.age if profile and profile.age else '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="male"   {% if profile and profile.gender == 'male'   %}selected{% endif %}>Male</option>
+                            <option value="female" {% if profile and profile.gender == 'female' %}selected{% endif %}>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" placeholder="e.g. 175" required min="100" max="250"
+                               value="{{ profile.height | int if profile and profile.height else '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)
+                            {% if profile and profile.weight %}
+                            <a href="/profile" style="color: var(--secondary); font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; text-decoration: none;">✏️ Update</a>
+                            {% endif %}
+                        </label>
+                        <input type="number" id="weight" name="weight" placeholder="e.g. 70" required min="30" max="300" step="0.1"
+                               value="{{ profile.weight if profile and profile.weight else '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="goal">Fitness Goal</label>
+                        <select id="goal" name="goal" required>
+                            <option value="fat loss">Fat Loss</option>
+                            <option value="muscle gain">Muscle Gain</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity">Activity Level</label>
+                        <select id="activity" name="activity" required>
+                            <option value="1.2"   {% if profile and profile.activity == 1.2   %}selected{% endif %}>Sedentary (Office job)</option>
+                            <option value="1.375" {% if profile and profile.activity == 1.375 %}selected{% endif %}>Lightly Active (1-3 days/week)</option>
+                            <option value="1.55"  {% if profile and profile.activity == 1.55  %}selected{% endif %}>Moderately Active (3-5 days/week)</option>
+                            <option value="1.725" {% if profile and profile.activity == 1.725 %}selected{% endif %}>Very Active (6-7 days/week)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="diet_type">Diet Preference</label>
+                        <select id="diet_type" name="diet_type" required>
+                            <option value="veg"        {% if profile and profile.diet_type == 'veg'        %}selected{% endif %}>Vegetarian</option>
+                            <option value="eggitarian" {% if profile and profile.diet_type == 'eggitarian' %}selected{% endif %}>Eggitarian / Non-Veg</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Generate My Plan</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+</body>
+</html>

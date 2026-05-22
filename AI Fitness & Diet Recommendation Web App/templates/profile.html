@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - AI Fitness Studio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 32px rgba(99,102,241,0.4);
+        }
+        .profile-meta {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .profile-meta .username {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        .profile-meta .email {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .weight-highlight {
+            background: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(99,102,241,0.12));
+            border: 1px solid rgba(6,182,212,0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .weight-highlight label {
+            color: var(--secondary) !important;
+            font-size: 0.85rem;
+        }
+        .weight-highlight input {
+            border-color: rgba(6,182,212,0.4);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .weight-highlight input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(6,182,212,0.2);
+        }
+        .weight-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(6,182,212,0.1);
+            color: var(--secondary);
+            border-radius: 8px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .weight-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        .profile-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .profile-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .profile-nav a:hover { color: var(--text-light); }
+        .profile-nav .nav-right { display: flex; gap: 1.5rem; }
+        .profile-nav .nav-right a:last-child { color: var(--accent); }
+        .profile-saved-info {
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .profile-saved-info .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px #22c55e;
+        }
+        .btn-secondary {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.75rem;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container" style="max-width: 680px;">
+        <nav class="profile-nav" data-aos="fade-down">
+            <a href="/">← Back to Calculator</a>
+            <div class="nav-right">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </nav>
+
+        <div class="glass-card animate-in">
+            <!-- Avatar & Identity -->
+            <div class="profile-meta" data-aos="zoom-in">
+                <div class="profile-avatar">
+                    {{ current_user.username[0].upper() }}
+                </div>
+                <div class="username">{{ current_user.username }}</div>
+                <div class="email">{{ current_user.email }}</div>
+            </div>
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}"
+                             style="color: {% if category == 'success' %}#22c55e{% else %}var(--accent){% endif %};
+                                    margin-bottom: 1.5rem; text-align: center; font-weight: 600;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Profile completeness hint -->
+            {% if current_user.weight %}
+            <div class="profile-saved-info" data-aos="fade-up">
+                <div class="dot"></div>
+                Profile data is saved — your calculator form will be auto-filled on every visit.
+            </div>
+            {% else %}
+            <div class="profile-saved-info" data-aos="fade-up" style="border-color: rgba(244,63,94,0.2);">
+                <div class="dot" style="background:#f43f5e; box-shadow: 0 0 8px #f43f5e;"></div>
+                Fill in your details below to auto-fill the calculator on every visit.
+            </div>
+            {% endif %}
+
+            <form action="/profile" method="POST" data-aos="fade-up">
+
+                <!-- ⚖️ Weight — highlighted section -->
+                <div class="weight-highlight">
+                    <div class="weight-badge">⚖️ Current Weight</div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" step="0.1" min="30" max="300"
+                               placeholder="e.g. 70.5"
+                               value="{{ current_user.weight if current_user.weight else '' }}">
+                    </div>
+                    <p class="weight-hint">Update this whenever you weigh yourself (typically every 1–4 weeks).</p>
+                </div>
+
+                <!-- Body Stats -->
+                <div class="section-title">Body Stats</div>
+                <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="10" max="100"
+                               placeholder="e.g. 25"
+                               value="{{ current_user.age if current_user.age else '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" min="100" max="250"
+                               placeholder="e.g. 175"
+                               value="{{ current_user.height if current_user.height else '' }}">
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="section-title">Preferences</div>
+                <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 2.5rem;">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="">Select</option>
+                            <option value="male"   {% if current_user.gender == 'male'   %}selected{% endif %}>Male</option>
+                            <option value="female" {% if current_user.gender == 'female' %}selected{% endif %}>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity">Activity Level</label>
+                        <select id="activity" name="activity">
+                            <option value="">Select</option>
+                            <option value="1.2"   {% if current_user.activity == 1.2   %}selected{% endif %}>Sedentary</option>
+                            <option value="1.375" {% if current_user.activity == 1.375 %}selected{% endif %}>Lightly Active</option>
+                            <option value="1.55"  {% if current_user.activity == 1.55  %}selected{% endif %}>Moderately Active</option>
+                            <option value="1.725" {% if current_user.activity == 1.725 %}selected{% endif %}>Very Active</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="diet_type">Diet Preference</label>
+                        <select id="diet_type" name="diet_type">
+                            <option value="">Select</option>
+                            <option value="veg"        {% if current_user.diet_type == 'veg'        %}selected{% endif %}>Vegetarian</option>
+                            <option value="eggitarian" {% if current_user.diet_type == 'eggitarian' %}selected{% endif %}>Eggitarian / Non-Veg</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Save Profile</button>
+            </form>
+
+            <a href="/" class="btn-secondary">Go to Calculator →</a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+    </script>
+</body>
+</html>
