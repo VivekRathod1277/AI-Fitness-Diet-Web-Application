@@ -25,7 +25,7 @@ DIET_DATABASE = {
                 {'name': 'Mushroom Sauté', 'protein': 6, 'carbs': 10, 'fats': 7, 'fiber': 3, 'iron': '2mg', 'calories': 130}
             ]
         },
-        'eggitarian': {
+        'non-veg': {
             'breakfast': [
                 {'name': 'Boiled Eggs & Toast', 'protein': 16, 'carbs': 25, 'fats': 10, 'fiber': 3, 'iron': '2mg', 'calories': 250},
                 {'name': 'Egg White Omelet', 'protein': 20, 'carbs': 5, 'fats': 2, 'fiber': 1, 'iron': '0.5mg', 'calories': 120},
@@ -46,6 +46,29 @@ DIET_DATABASE = {
                 {'name': 'Grilled Chicken & Broccoli', 'protein': 40, 'carbs': 10, 'fats': 5, 'fiber': 6, 'iron': '2mg', 'calories': 245},
                 {'name': 'Egg Bhurji (No Butter)', 'protein': 15, 'carbs': 5, 'fats': 10, 'fiber': 2, 'iron': '2mg', 'calories': 170},
                 {'name': 'Salmon with Asparagus', 'protein': 25, 'carbs': 8, 'fats': 15, 'fiber': 4, 'iron': '1mg', 'calories': 270}
+            ]
+        },
+        'eggitarian': {
+            'breakfast': [
+                {'name': 'Boiled Eggs & Toast', 'protein': 16, 'carbs': 25, 'fats': 10, 'fiber': 3, 'iron': '2mg', 'calories': 250},
+                {'name': 'Egg White Omelet', 'protein': 20, 'carbs': 5, 'fats': 2, 'fiber': 1, 'iron': '0.5mg', 'calories': 120},
+                {'name': 'Scrambled Eggs with Spinach', 'protein': 18, 'carbs': 6, 'fats': 12, 'fiber': 2, 'iron': '3mg', 'calories': 200},
+                {'name': 'Protein Pancakes (Egg based)', 'protein': 22, 'carbs': 30, 'fats': 6, 'fiber': 5, 'iron': '2mg', 'calories': 260},
+                {'name': 'Poached Eggs on Rye', 'protein': 14, 'carbs': 20, 'fats': 10, 'fiber': 4, 'iron': '2mg', 'calories': 230}
+            ],
+            'lunch': [
+                {'name': 'Egg Curry (Light) & Rice', 'protein': 18, 'carbs': 40, 'fats': 14, 'fiber': 3, 'iron': '2mg', 'calories': 380},
+                {'name': 'Boiled Egg Salad', 'protein': 15, 'carbs': 15, 'fats': 12, 'fiber': 5, 'iron': '2mg', 'calories': 250},
+                {'name': 'Egg Bhurji & Roti', 'protein': 20, 'carbs': 30, 'fats': 15, 'fiber': 6, 'iron': '3mg', 'calories': 350},
+                {'name': 'Lentil Soup with Boiled Eggs', 'protein': 22, 'carbs': 35, 'fats': 8, 'fiber': 10, 'iron': '4mg', 'calories': 300},
+                {'name': 'Vegetable & Egg Stir-fry', 'protein': 18, 'carbs': 20, 'fats': 12, 'fiber': 8, 'iron': '3mg', 'calories': 270}
+            ],
+            'dinner': [
+                {'name': 'Omelet with Veggies', 'protein': 16, 'carbs': 8, 'fats': 12, 'fiber': 3, 'iron': '2mg', 'calories': 200},
+                {'name': 'Egg Drop Soup', 'protein': 12, 'carbs': 10, 'fats': 5, 'fiber': 2, 'iron': '1mg', 'calories': 150},
+                {'name': 'Boiled Eggs & Sautéed Greens', 'protein': 15, 'carbs': 10, 'fats': 10, 'fiber': 6, 'iron': '2mg', 'calories': 200},
+                {'name': 'Egg & Tofu Scramble', 'protein': 20, 'carbs': 5, 'fats': 14, 'fiber': 4, 'iron': '3mg', 'calories': 250},
+                {'name': 'Light Dal & 2 Boiled Eggs', 'protein': 20, 'carbs': 20, 'fats': 12, 'fiber': 5, 'iron': '3mg', 'calories': 280}
             ]
         }
     },
@@ -73,7 +96,7 @@ DIET_DATABASE = {
                 {'name': 'Vegetable Stew & Bread', 'protein': 10, 'carbs': 55, 'fats': 8, 'fiber': 8, 'iron': '3mg', 'calories': 330}
             ]
         },
-        'eggitarian': {
+        'non-veg': {
             'breakfast': [
                 {'name': 'Whole Eggs Omelet (3-4 eggs)', 'protein': 24, 'carbs': 5, 'fats': 20, 'fiber': 1, 'iron': '3mg', 'calories': 295},
                 {'name': 'Chicken Sausage & Eggs', 'protein': 30, 'carbs': 10, 'fats': 25, 'fiber': 2, 'iron': '4mg', 'calories': 385},
@@ -94,6 +117,29 @@ DIET_DATABASE = {
                 {'name': 'Grilled Salmon & Rice', 'protein': 35, 'carbs': 50, 'fats': 18, 'fiber': 3, 'iron': '2mg', 'calories': 500},
                 {'name': 'Scrambled Eggs & Avocado Toast', 'protein': 20, 'carbs': 35, 'fats': 25, 'fiber': 10, 'iron': '3mg', 'calories': 445},
                 {'name': 'Turkey Burger (No Bun)', 'protein': 35, 'carbs': 15, 'fats': 12, 'fiber': 4, 'iron': '3mg', 'calories': 310}
+            ]
+        },
+        'eggitarian': {
+            'breakfast': [
+                {'name': 'Whole Eggs Omelet (3-4 eggs)', 'protein': 24, 'carbs': 5, 'fats': 20, 'fiber': 1, 'iron': '3mg', 'calories': 295},
+                {'name': 'French Toast with Honey', 'protein': 15, 'carbs': 65, 'fats': 12, 'fiber': 3, 'iron': '2mg', 'calories': 430},
+                {'name': 'Egg & Cheese Sandwich', 'protein': 22, 'carbs': 40, 'fats': 18, 'fiber': 4, 'iron': '3mg', 'calories': 410},
+                {'name': 'Protein Oats with Egg Whites', 'protein': 35, 'carbs': 50, 'fats': 8, 'fiber': 6, 'iron': '3mg', 'calories': 410},
+                {'name': 'Scrambled Eggs & Avocado Toast', 'protein': 20, 'carbs': 35, 'fats': 25, 'fiber': 10, 'iron': '3mg', 'calories': 445}
+            ],
+            'lunch': [
+                {'name': 'Egg Fried Rice (High Protein)', 'protein': 25, 'carbs': 65, 'fats': 15, 'fiber': 5, 'iron': '3mg', 'calories': 495},
+                {'name': 'Egg Curry (Rich) & Brown Rice', 'protein': 25, 'carbs': 60, 'fats': 20, 'fiber': 6, 'iron': '4mg', 'calories': 520},
+                {'name': 'Double Egg Roll', 'protein': 20, 'carbs': 50, 'fats': 18, 'fiber': 5, 'iron': '3mg', 'calories': 450},
+                {'name': 'Soya & Egg Stir-fry', 'protein': 35, 'carbs': 40, 'fats': 15, 'fiber': 10, 'iron': '5mg', 'calories': 450},
+                {'name': 'Boiled Eggs with Chickpea Salad', 'protein': 25, 'carbs': 50, 'fats': 15, 'fiber': 12, 'iron': '4mg', 'calories': 440}
+            ],
+            'dinner': [
+                {'name': 'Paneer & Egg Bhurji', 'protein': 30, 'carbs': 15, 'fats': 25, 'fiber': 4, 'iron': '3mg', 'calories': 420},
+                {'name': 'Egg Noodle Stir-fry', 'protein': 25, 'carbs': 60, 'fats': 15, 'fiber': 6, 'iron': '3mg', 'calories': 480},
+                {'name': 'Shakshuka (Eggs in Tomato Sauce) & Bread', 'protein': 20, 'carbs': 40, 'fats': 18, 'fiber': 7, 'iron': '4mg', 'calories': 400},
+                {'name': 'Lentil Pasta with Egg Whites', 'protein': 35, 'carbs': 50, 'fats': 10, 'fiber': 8, 'iron': '5mg', 'calories': 450},
+                {'name': 'Mashed Potatoes & 3 Boiled Eggs', 'protein': 22, 'carbs': 45, 'fats': 16, 'fiber': 5, 'iron': '3mg', 'calories': 420}
             ]
         }
     }
@@ -418,5 +464,16 @@ def get_weekly_workout(goal, workout_style='home'):
                             ex['notes'] = 'Use challenging weights. ' + ex['notes']
                         if 'min' not in ex['reps'] and 's' not in ex['reps']:
                             ex['reps'] = '8-12 reps'
+    elif workout_style.lower() == 'running':
+        for day, data in plans.items():
+            if 'Rest' not in data['type']:
+                data['type'] = 'Running / Cardio'
+                data['focus'] = 'Endurance & Stamina'
+                data['exercises'] = [
+                    _ex('Dynamic Warm-up', 1, '5 min', '-', 'Leg swings, high knees, light jog', 'Full Body'),
+                    _ex('Main Run', 1, '30-45 min', '-', 'Maintain steady pace or intervals', 'Cardio, Legs'),
+                    _ex('Cooldown Walk', 1, '5 min', '-', 'Let heart rate recover', 'Cardio'),
+                    _ex('Static Stretching', 1, '5 min', '-', 'Focus on calves, quads, hamstrings', 'Flexibility')
+                ]
 
     return plans

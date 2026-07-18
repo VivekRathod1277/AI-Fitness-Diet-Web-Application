@@ -248,7 +248,10 @@
                         <select id="diet_type" name="diet_type">
                             <option value="">Select</option>
                             <option value="veg"        {% if current_user.diet_type == 'veg'        %}selected{% endif %}>Vegetarian</option>
-                            <option value="eggitarian" {% if current_user.diet_type == 'eggitarian' %}selected{% endif %}>Eggitarian / Non-Veg</option>
+                            <option value="eggitarian" {% if current_user.diet_type == 'eggitarian' %}selected{% endif %}>Eggitarian</option>
+                            <option value="non-veg"    {% if current_user.diet_type == 'non-veg'    %}selected{% endif %}>Non-Vegetarian</option>
+                            <option value="vegan"      {% if current_user.diet_type == 'vegan'      %}selected{% endif %}>Vegan</option>
+                            <option value="keto"       {% if current_user.diet_type == 'keto'       %}selected{% endif %}>Keto</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -261,9 +264,10 @@
                     <div class="form-group">
                         <label for="workout_style">Exercise Preference</label>
                         <select id="workout_style" name="workout_style">
-                            <option value="home" {% if current_user.workout_style == 'home' %}selected{% endif %}>Home / Normal Exercise</option>
-                            <option value="gym"  {% if current_user.workout_style == 'gym'  %}selected{% endif %}>Gym Weights</option>
-                            <option value="yoga" {% if current_user.workout_style == 'yoga' %}selected{% endif %}>Yoga / Pilates</option>
+                            <option value="home"    {% if current_user.workout_style == 'home'    %}selected{% endif %}>Home / Normal Exercise</option>
+                            <option value="gym"     {% if current_user.workout_style == 'gym'     %}selected{% endif %}>Gym Weights</option>
+                            <option value="yoga"    {% if current_user.workout_style == 'yoga'    %}selected{% endif %}>Yoga / Pilates</option>
+                            <option value="running" {% if current_user.workout_style == 'running' %}selected{% endif %}>Running / Cardio</option>
                         </select>
                     </div>
                 </div>
