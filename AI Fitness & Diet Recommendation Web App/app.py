@@ -39,6 +39,7 @@ class User(db.Model, UserMixin):
     diet_type  = db.Column(db.String(20), nullable=True)
     unit_system= db.Column(db.String(10), default='metric')
     excluded_foods = db.Column(db.String(255), nullable=True) # comma separated
+    workout_style = db.Column(db.String(20), default='home')
     records = db.relationship('FitnessRecord', backref='owner', lazy=True)
 
 class FitnessRecord(db.Model):
@@ -75,6 +76,7 @@ def migrate_db():
         ('diet_type', 'VARCHAR(20)'),
         ('unit_system', 'VARCHAR(10)'),
         ('excluded_foods', 'VARCHAR(255)'),
+        ('workout_style', 'VARCHAR(20)'),
     ]
     for col_name, col_type in new_columns:
         if col_name not in existing_cols:
@@ -107,6 +109,7 @@ def index():
             activity = float(request.form['activity'])
             diet_type = request.form['diet_type']
             unit_system = request.form.get('unit_system', 'metric')
+            workout_style = request.form.get('workout_style', 'home')
             
             # Convert imperial to metric for calculation
             calc_weight = weight * 0.453592 if unit_system == 'imperial' else weight
@@ -132,7 +135,7 @@ def index():
                 'carbs': round((calories * 0.45) / 4),
                 'fats': round((calories * 0.25) / 9),
                 'weekly_diet': get_weekly_diet(goal, diet_type, excluded_foods, calories),
-                'weekly_workout': get_weekly_workout(goal),
+                'weekly_workout': get_weekly_workout(goal, workout_style),
                 'goal': goal.capitalize(),
                 'weight': weight,
                 'height': height,
@@ -271,6 +274,7 @@ def profile():
             current_user.diet_type = request.form.get('diet_type') or None
             current_user.unit_system = request.form.get('unit_system') or 'metric'
             current_user.excluded_foods = request.form.get('excluded_foods') or ''
+            current_user.workout_style = request.form.get('workout_style') or 'home'
             db.session.commit()
             flash('Profile updated successfully!', 'success')
         except Exception as e:

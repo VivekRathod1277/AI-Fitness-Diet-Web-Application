@@ -176,7 +176,7 @@ def get_alternative_meal(goal, diet_type, meal_type, excluded_foods_str='', targ
 def _ex(name, sets, reps, rest, notes='', target=''):
     return {'name': name, 'sets': sets, 'reps': reps, 'rest': rest, 'notes': notes, 'target': target}
 
-def get_weekly_workout(goal):
+def get_weekly_workout(goal, workout_style='home'):
     if goal.lower() == 'fat loss':
         plans = {
             'Day 1': {
@@ -243,7 +243,6 @@ def get_weekly_workout(goal):
                 'type': 'Rest Day', 'focus': 'Recovery', 'duration': '-', 'color': '#94a3b8',
                 'exercises': [
                     _ex('Complete Rest', 1, '-', '-', 'Let your muscles repair and grow', 'CNS Recovery'),
-                    _ex('Optional Light Walk', 1, '20-30 min', '-', 'Fresh air, low intensity only', 'Active Recovery'),
                     _ex('Foam Rolling', 1, '10-15 min', '-', 'Focus on sore muscle groups', 'Myofascial Release'),
                 ]
             },
@@ -380,4 +379,44 @@ def get_weekly_workout(goal):
                 ]
             },
         }
+
+    if workout_style.lower() == 'yoga':
+        for day, data in plans.items():
+            if 'Rest' not in data['type']:
+                data['type'] = 'Yoga Flow'
+                data['focus'] = 'Flexibility & Core'
+                data['exercises'] = [
+                    _ex('Sun Salutations', 3, '5 reps', '30s', 'Flow with breath', 'Full Body'),
+                    _ex('Downward Dog', 3, '60s hold', '30s', 'Press heels to floor', 'Hamstrings, Shoulders'),
+                    _ex('Warrior II', 3, '45s each side', '30s', 'Keep front knee over ankle', 'Legs, Core'),
+                    _ex('Tree Pose', 3, '60s each side', '30s', 'Find balance, engage core', 'Balance'),
+                    _ex("Child's Pose", 1, '2 min', '-', 'Relax and breathe deeply', 'Recovery')
+                ]
+    elif workout_style.lower() == 'gym':
+        swaps = {
+            'Push-ups': 'Bench Press',
+            'Diamond Push-ups': 'Tricep Rope Pushdown',
+            'Pike Push-ups': 'Overhead Dumbbell Press',
+            'Tricep Dips': 'Cable Tricep Extensions',
+            'Bodyweight Squats': 'Barbell Squats',
+            'Reverse Lunges': 'Dumbbell Lunges',
+            'Glute Bridges': 'Barbell Hip Thrusts',
+            'Wall Sit': 'Leg Press',
+            'Burpees': 'Kettlebell Swings',
+            'Jump Squats': 'Box Jumps',
+            'Pull-ups': 'Lat Pulldown',
+            'Plank': 'Weighted Plank'
+        }
+        for day, data in plans.items():
+            if 'Rest' not in data['type']:
+                data['type'] += ' (Gym)'
+            for ex in data.get('exercises', []):
+                for old, new in swaps.items():
+                    if old in ex['name']:
+                        ex['name'] = ex['name'].replace(old, new)
+                        if 'Weighted' not in ex['notes']:
+                            ex['notes'] = 'Use challenging weights. ' + ex['notes']
+                        if 'min' not in ex['reps'] and 's' not in ex['reps']:
+                            ex['reps'] = '8-12 reps'
+
     return plans

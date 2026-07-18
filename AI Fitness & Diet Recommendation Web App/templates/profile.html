@@ -258,6 +258,14 @@
                             <option value="imperial" {% if current_user.unit_system == 'imperial' %}selected{% endif %}>Imperial (lb, in)</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="workout_style">Exercise Preference</label>
+                        <select id="workout_style" name="workout_style">
+                            <option value="home" {% if current_user.workout_style == 'home' %}selected{% endif %}>Home / Normal Exercise</option>
+                            <option value="gym"  {% if current_user.workout_style == 'gym'  %}selected{% endif %}>Gym Weights</option>
+                            <option value="yoga" {% if current_user.workout_style == 'yoga' %}selected{% endif %}>Yoga / Pilates</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 2.5rem;">
                     <label for="excluded_foods">Excluded Foods / Allergies (comma-separated)</label>
