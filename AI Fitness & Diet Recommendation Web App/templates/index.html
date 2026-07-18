@@ -82,7 +82,14 @@
             </div>
             {% endif %}
 
-            <form action="/" method="POST">
+            <form action="/" method="POST" onsubmit="return validateForm()">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="unit_system">Unit System</label>
+                    <select id="unit_system" name="unit_system" onchange="toggleUnits()">
+                        <option value="metric" {% if profile and profile.unit_system == 'metric' %}selected{% endif %}>Metric (kg, cm)</option>
+                        <option value="imperial" {% if profile and profile.unit_system == 'imperial' %}selected{% endif %}>Imperial (lb, in)</option>
+                    </select>
+                </div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="age">Age</label>
@@ -146,6 +153,58 @@
             duration: 1000,
             once: true
         });
+
+        function toggleUnits() {
+            const unit = document.getElementById('unit_system').value;
+            const weightLabel = document.querySelector('label[for="weight"]');
+            const heightLabel = document.querySelector('label[for="height"]');
+            
+            const updateLink = weightLabel.querySelector('a') ? weightLabel.querySelector('a').outerHTML : '';
+
+            if (unit === 'imperial') {
+                weightLabel.innerHTML = 'Weight (lb)' + (updateLink ? ' ' + updateLink : '');
+                heightLabel.innerHTML = 'Height (inches)';
+            } else {
+                weightLabel.innerHTML = 'Weight (kg)' + (updateLink ? ' ' + updateLink : '');
+                heightLabel.innerHTML = 'Height (cm)';
+            }
+        }
+        
+        function validateForm() {
+            const age = parseInt(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const unit = document.getElementById('unit_system').value;
+            
+            if (age < 10 || age > 120) {
+                alert('Please enter a valid age between 10 and 120.');
+                return false;
+            }
+            
+            if (unit === 'metric') {
+                if (weight < 20 || weight > 400) {
+                    alert('Please enter a valid weight in kg (20 - 400).');
+                    return false;
+                }
+                if (height < 50 || height > 300) {
+                    alert('Please enter a valid height in cm (50 - 300).');
+                    return false;
+                }
+            } else {
+                if (weight < 40 || weight > 800) {
+                    alert('Please enter a valid weight in lb (40 - 800).');
+                    return false;
+                }
+                if (height < 20 || height > 120) {
+                    alert('Please enter a valid height in inches (20 - 120).');
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // Run on load
+        toggleUnits();
     </script>
 </body>
 </html>

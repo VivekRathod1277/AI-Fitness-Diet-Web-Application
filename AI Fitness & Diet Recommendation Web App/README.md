@@ -1,5 +1,15 @@
 # AI Fitness & Diet Recommendation Web App
 
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Flask](https://img.shields.io/badge/Flask-3.0.2-green.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Open Issues](https://img.shields.io/github/issues/VivekRathod1277/AI-Fitness-Diet-Web-Application)
+![Last Commit](https://img.shields.io/github/last-commit/VivekRathod1277/AI-Fitness-Diet-Web-Application)
+
+<p align="center">
+  <img src="docs/screenshots/hero_dashboard.png" alt="Dashboard Preview" width="800">
+</p>
+
 A comprehensive, personalized fitness and diet recommendation web application built with Python (Flask). This application assists users in their fitness journey by calculating essential body metrics such as BMI and BMR, and generating highly customized weekly diet and workout plans based on their unique goals, activity levels, and dietary preferences.
 
 ## 🌟 Core Features
@@ -34,7 +44,10 @@ AI Fitness & Diet Recommendation Web App/
 ├── requirements.txt        # Python dependencies
 ├── Dockerfile              # Docker configuration for containerized deployment
 ├── fitness.db              # SQLite database (generated on first run)
+├── .env.example            # Environment variables template
+├── CONTRIBUTING.md         # Guidelines for contributing
 │
+├── docs/                   # Screenshots and documentation
 ├── static/                 # Static assets (CSS, JS, Images)
 │   └── (CSS/JS files)
 │
@@ -49,6 +62,19 @@ AI Fitness & Diet Recommendation Web App/
 └── utils/                  # Utility scripts
     └── pdf_generator.py    # Logic for generating downloadable PDF reports
 ```
+
+## 🗺️ Routes Reference
+
+| Route | HTTP Method | Auth Required | Purpose |
+|-------|-------------|---------------|---------|
+| `/` | GET, POST | No | Home page / Calculate metrics & generate plan |
+| `/register` | GET, POST | No | User Registration |
+| `/login` | GET, POST | No | User Login |
+| `/logout` | GET | Yes | User Logout |
+| `/dashboard` | GET | Yes | Progress dashboard & active plans |
+| `/profile` | GET, POST | Yes | View / Update user profile |
+| `/save_record` | POST | Yes | Save generated plan to user account |
+| `/download_pdf` | POST | No | Generate & download PDF of plan |
 
 ## 🚀 Step-by-Step Usage Guide
 
@@ -126,6 +152,13 @@ To run the application inside an isolated Docker container without installing Py
    docker run -p 5000:5000 ai-fitness-app
    ```
 3. Access the app at `http://localhost:5000`.
+
+## 🛣️ Roadmap
+
+- [ ] **Phase 2: Core UX & Usability**: Unit toggles, meal swapping, allergy filters, dark mode.
+- [ ] **Phase 3: Tracking & Visualization**: Trend charts, water/meal trackers, streak counter.
+- [ ] **Phase 4: Personalization & AI**: Progressive overload tracking, adaptive diet plan regeneration, smarter macros.
+- [ ] **Phase 5: Engagement**: Email nudges, achievement badges, shareable progress cards.
 
 ## 📜 License
 

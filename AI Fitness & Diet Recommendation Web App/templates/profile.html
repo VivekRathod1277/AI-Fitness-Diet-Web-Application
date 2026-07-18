@@ -251,12 +251,35 @@
                             <option value="eggitarian" {% if current_user.diet_type == 'eggitarian' %}selected{% endif %}>Eggitarian / Non-Veg</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="unit_system">Unit System</label>
+                        <select id="unit_system" name="unit_system">
+                            <option value="metric" {% if current_user.unit_system == 'metric' %}selected{% endif %}>Metric (kg, cm)</option>
+                            <option value="imperial" {% if current_user.unit_system == 'imperial' %}selected{% endif %}>Imperial (lb, in)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 2.5rem;">
+                    <label for="excluded_foods">Excluded Foods / Allergies (comma-separated)</label>
+                    <input type="text" id="excluded_foods" name="excluded_foods" placeholder="e.g. peanuts, dairy, soy" value="{{ current_user.excluded_foods if current_user.excluded_foods else '' }}">
                 </div>
 
                 <button type="submit" class="btn-primary">Save Profile</button>
             </form>
-
-            <a href="/" class="btn-secondary">Go to Calculator →</a>
+            
+            <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0 2rem;">
+            
+            <div class="danger-zone">
+                <h3>Danger Zone</h3>
+                <p>Once you delete your account, there is no going back. Please be certain.</p>
+                <form action="/delete_account" method="POST" onsubmit="return confirm('Are you absolutely sure you want to permanently delete your account and all saved plans? This action cannot be undone.');">
+                    <button type="submit" class="btn-danger">Delete Account</button>
+                </form>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+            </div>
         </div>
     </div>
 

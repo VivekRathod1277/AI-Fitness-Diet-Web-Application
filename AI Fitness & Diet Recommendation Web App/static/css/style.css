@@ -381,3 +381,96 @@ canvas {
     font-weight: 700;
     margin-bottom: 1rem;
 }
+
+/* Custom utility classes */
+.checkbox-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+}
+.checkbox-group input {
+    width: auto;
+    cursor: pointer;
+}
+.checkbox-group label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.meal-item {
+    padding: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: rgba(0,0,0,0.15);
+}
+.meal-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.meal-item-content {
+    flex: 1;
+    padding-right: 1rem;
+}
+.meal-name {
+    font-weight: 600;
+}
+.meal-macros {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.btn-swap {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+.btn-swap:hover {
+    background: var(--primary);
+    color: #fff;
+}
+.danger-zone {
+    background: rgba(244,63,94,0.05);
+    border: 1px solid rgba(244,63,94,0.2);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: left;
+}
+.danger-zone h3 {
+    color: #f87171;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+.danger-zone p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+.btn-danger {
+    background: rgba(244,63,94,0.1);
+    color: #f87171;
+    border: 1px solid #f87171;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+.btn-danger:hover {
+    background: #f87171;
+    color: #fff;
+}

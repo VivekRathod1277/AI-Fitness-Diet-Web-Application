@@ -20,6 +20,25 @@
                 <p class="subtitle">Personalized for <strong>{{ results.goal }}</strong></p>
             </div>
 
+            {% macro render_meal(meal_data, meal_name, day_key) %}
+            <li class="meal-item" data-day="{{ day_key }}" data-meal="{{ meal_name }}">
+                <div class="meal-item-header">
+                    <div class="meal-item-content">
+                        <strong style="color: var(--primary);">{{ meal_name|capitalize }}:</strong> <span class="meal-name">{{ meal_data.name }}</span>
+                        <div class="meal-macros">
+                            <span>🔥 <span class="m-cal" style="color:var(--text-light);">{{ meal_data.calories }}</span> kcal</span>
+                            <span>🥩 P: <span class="m-pro" style="color:var(--accent);">{{ meal_data.protein }}</span>g</span>
+                            <span>🍞 C: <span class="m-car" style="color:var(--secondary);">{{ meal_data.carbs }}</span>g</span>
+                            <span>🥑 F: <span class="m-fat" style="color:var(--primary);">{{ meal_data.fats }}</span>g</span>
+                            <span>🌾 Fiber: <span class="m-fib">{{ meal_data.fiber }}</span>g</span>
+                            <span>🩸 Iron: <span class="m-iro">{{ meal_data.iron }}</span></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-swap" onclick="swapMeal(this, '{{ meal_name }}')">Swap</button>
+                </div>
+            </li>
+            {% endmacro %}
+
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -74,10 +93,10 @@
                             <div class="plan-card" data-aos="fade-right">
                                 <div class="day-badge">Day {{ i }} - Nutrition</div>
                                 <h3>🍽️ Meal Plan</h3>
-                                <ul class="plan-list">
-                                    <li><span class="icon"></span> <strong>Breakfast:</strong> {{ results.weekly_diet[day_key].breakfast }}</li>
-                                    <li><span class="icon"></span> <strong>Lunch:</strong> {{ results.weekly_diet[day_key].lunch }}</li>
-                                    <li><span class="icon"></span> <strong>Dinner:</strong> {{ results.weekly_diet[day_key].dinner }}</li>
+                                <ul class="plan-list" style="padding-left: 0; list-style: none;">
+                                    {{ render_meal(results.weekly_diet[day_key].breakfast, 'breakfast', day_key) }}
+                                    {{ render_meal(results.weekly_diet[day_key].lunch, 'lunch', day_key) }}
+                                    {{ render_meal(results.weekly_diet[day_key].dinner, 'dinner', day_key) }}
                                 </ul>
                             </div>
                             <div class="plan-card" data-aos="fade-left">
@@ -102,6 +121,9 @@
                                             <span style="font-size:0.72rem; font-weight:700; padding:0.2rem 0.55rem; border-radius:7px; background:rgba(6,182,212,0.15); color:var(--secondary);">{{ ex.reps }}</span>
                                             <span style="font-size:0.72rem; font-weight:700; padding:0.2rem 0.55rem; border-radius:7px; background:rgba(244,63,94,0.12); color:#f87171;">Rest: {{ ex.rest }}</span>
                                         </div>
+                                        {% if ex.target %}
+                                        <div style="font-size:0.75rem; color:var(--text-light); margin-left:0.25rem; font-weight:600;">🎯 Target: {{ ex.target }}</div>
+                                        {% endif %}
                                         {% if ex.notes %}
                                         <div style="font-size:0.78rem; color:var(--text-muted); font-style:italic; padding-left:0.25rem;">💡 {{ ex.notes }}</div>
                                         {% endif %}
@@ -166,6 +188,47 @@
             
             // Re-trigger AOS for new content
             AOS.refresh();
+        }
+
+        async function swapMeal(btn, mealType) {
+            const goal = "{{ results.goal }}";
+            const dietType = "{{ results.diet_type }}";
+            const targetCalories = parseInt("{{ results.calories }}");
+            
+            btn.innerText = '...';
+            
+            try {
+                const res = await fetch('/swap_meal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ goal: goal, diet_type: dietType, meal_type: mealType, target_calories: targetCalories })
+                });
+                
+                if (!res.ok) throw new Error('Network response was not ok');
+                
+                const newMeal = await res.json();
+                
+                // Update DOM
+                const li = btn.closest('.meal-item');
+                li.querySelector('.meal-name').innerText = newMeal.name;
+                li.querySelector('.m-cal').innerText = newMeal.calories;
+                li.querySelector('.m-pro').innerText = newMeal.protein;
+                li.querySelector('.m-car').innerText = newMeal.carbs;
+                li.querySelector('.m-fat').innerText = newMeal.fats;
+                li.querySelector('.m-fib').innerText = newMeal.fiber;
+                li.querySelector('.m-iro').innerText = newMeal.iron;
+                
+                // Add a little highlight effect
+                li.style.transition = 'background 0.3s';
+                li.style.background = 'rgba(99,102,241,0.2)';
+                setTimeout(() => { li.style.background = 'rgba(0,0,0,0.15)'; }, 600);
+                
+            } catch (err) {
+                console.error(err);
+                alert('Error swapping meal. Please try again.');
+            } finally {
+                btn.innerText = 'Swap';
+            }
         }
     </script>
 </body>
